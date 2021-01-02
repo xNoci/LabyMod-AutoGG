@@ -1,0 +1,16 @@
+[
+{
+  "modid": "autogg",
+  "name": "AutoGG",
+  "description": "This addons sends a custom 'GG' message after each round. Custom Chattrigger possible.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["NociLP"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

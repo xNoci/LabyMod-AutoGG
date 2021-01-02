@@ -1,0 +1,9 @@
+{
+  "uuid": "%uuid%",
+  "name": "Auto GG",
+  "mainClass": "me.noci.labyaddon.Core",
+  "description": "This addons sends a custom 'GG' message after each round.\nCustom Chattrigger posible.",
+  "version": 2,
+  "author": "Noci",
+  "category": 1
+}
