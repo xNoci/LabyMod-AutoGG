@@ -24,6 +24,17 @@ out/
 .idea/
 *.iml
 *.iws
+out
+*.ipr
+.idea
+
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
 
 # Maven
 log/
@@ -33,6 +44,9 @@ target/
 build
 .gradle
 
+# other
+eclipse
+run
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
