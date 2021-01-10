@@ -1,6 +1,7 @@
 package me.noci.labyaddon.listener;
 
 import me.noci.labyaddon.Core;
+import me.noci.labyaddon.PingColor;
 import net.labymod.api.events.RenderEntityEvent;
 import net.labymod.core.LabyModCore;
 import net.labymod.main.LabyMod;
@@ -28,7 +29,7 @@ public class ServerRenderEntityListener implements RenderEntityEvent {
 
     @Override
     public void onRender(Entity entity, double x, double y, double z, float partialTicks) {
-        if(Minecraft.getMinecraft().getCurrentServerData() == null) return;
+        if (Minecraft.getMinecraft().getCurrentServerData() == null) return;
         if (!core.enabeled || entity == null || Minecraft.getMinecraft().gameSettings.hideGUI)
             return;
 
@@ -48,7 +49,6 @@ public class ServerRenderEntityListener implements RenderEntityEvent {
     private void renderPlayerPing(AbstractClientPlayer entity, User user, double x, double y, double z, float partialTicks) {
         RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
         float fixedPlayerViewX = renderManager.playerViewX * ((Minecraft.getMinecraft().gameSettings.thirdPersonView == 2) ? -1 : 1);
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
         double tagY = y + 2.4 + user.getMaxNameTagHeight();
         Scoreboard scoreboard = entity.getWorldScoreboard();
         if (scoreboard != null) {
@@ -86,11 +86,7 @@ public class ServerRenderEntityListener implements RenderEntityEvent {
         GlStateManager.scale(-scale, -scale, -scale);
         GlStateManager.color(1, 1, 1, 1);
 
-        String rawPing = getPingAsString(entity.getUniqueID());
-        String displayPing = rawPing.equals("?") ? rawPing : rawPing + " ms";
-
-
-        fontRenderer.drawString(displayPing, (float) x - fontRenderer.getStringWidth(displayPing) / 2, (float) y, getPingColorFromString(rawPing, sneaking), false);
+        drawPing(entity.getUniqueID(), sneaking, y);
 
         GlStateManager.depthMask(true);
         GlStateManager.enableLighting();
@@ -99,38 +95,17 @@ public class ServerRenderEntityListener implements RenderEntityEvent {
         GlStateManager.popMatrix();
     }
 
-    public static String getPingAsString(UUID uuid) {
+    private static void drawPing(UUID uuid, boolean sneaking, double y) {
         NetworkPlayerInfo playerInfo = LabyMod.getInstance().getPlayerListDataCache().get(uuid);
-        if (playerInfo == null) return "?";
-        int ping = playerInfo.getResponseTime();
-        if (ping <= 0) return "?";
-
-        StringBuilder pingString = new StringBuilder();
-
-        pingString.append(ping);
-
-        return pingString.toString();
-    }
-
-    public static int getPingColorFromString(String ping, boolean sneaking) {
-        if (ping.equals("?")) {
-            return sneaking ? 1431699285 : 5635925;
-        } else {
-            int pingInt = Integer.parseInt(ping);
-            if (pingInt <= 20) {
-                return sneaking ? 1431699285 : 5635925;
-            } else if (pingInt <= 50) {
-                return sneaking ? 1426106880 : 43520;
-            } else if (pingInt <= 75) {
-                return sneaking ? 1426106880 : 16777045;
-            } else if (pingInt <= 100) {
-                return sneaking ? 1442818560 : 16755200;
-            } else if (pingInt <= 200) {
-                return sneaking ? 1442796885 : 16733525;
-            } else {
-                return sneaking ? 1437204480 : 11141120;
-            }
+        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+        int ping = -1;
+        if (playerInfo != null) {
+            ping = playerInfo.getResponseTime();
         }
+
+        String pingDisplay = ping == -1 ? "?" : ping + " ms";
+        PingColor color = PingColor.getColor(ping);
+        fontRenderer.drawString(pingDisplay, (float) -fontRenderer.getStringWidth(pingDisplay) / 2, (float) y, sneaking ? color.getRGBA() : color.getRGB(), false);
     }
 
 }
