@@ -103,7 +103,7 @@ public class ServerRenderEntityListener implements RenderEntityEvent {
             ping = playerInfo.getResponseTime();
         }
 
-        String pingDisplay = ping == -1 ? "?" : ping + " ms";
+        String pingDisplay = ping <= 0 ? "?" : ping + " ms";
         PingColor color = PingColor.getColor(ping);
         fontRenderer.drawString(pingDisplay, (float) -fontRenderer.getStringWidth(pingDisplay) / 2, (float) y, sneaking ? color.getRGBA() : color.getRGB(), false);
     }
