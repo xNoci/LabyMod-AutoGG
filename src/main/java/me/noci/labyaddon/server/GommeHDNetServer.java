@@ -35,9 +35,7 @@ public class GommeHDNetServer extends Server {
      */
     @Override
     public ChatDisplayAction handleChatMessage(String clean, String formatted) throws Exception {
-        System.out.println(1);
         if (!core.enabeled) return ChatDisplayAction.NORMAL;
-        System.out.println(2);
         if (core.indicators.contains(clean)) {
 
             Thread thread = new Thread(new Runnable() {
