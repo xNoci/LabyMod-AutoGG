@@ -30,7 +30,7 @@ public class ServerRenderEntityListener implements RenderEntityEvent {
     @Override
     public void onRender(Entity entity, double x, double y, double z, float partialTicks) {
         if (Minecraft.getMinecraft().getCurrentServerData() == null) return;
-        if (!core.enabeled || entity == null || Minecraft.getMinecraft().gameSettings.hideGUI)
+        if (!core.enabeled || entity == null || Minecraft.getMinecraft().gameSettings.hideGUI || entity.isInvisibleToPlayer( Minecraft.getMinecraft().thePlayer))
             return;
 
         if (LabyMod.getSettings().showMyName && !core.renderOwnPingEnabled && entity.getUniqueID().equals(LabyMod.getInstance().getPlayerUUID()))
@@ -40,7 +40,7 @@ public class ServerRenderEntityListener implements RenderEntityEvent {
         UUID uuid = entity.getUniqueID();
         User user = LabyMod.getInstance().getUserManager().getUser(uuid);
         if (entity.getName() != null) {
-            if (entity instanceof AbstractClientPlayer && (((AbstractClientPlayer) entity).getTeam() == null || ((AbstractClientPlayer) entity).getTeam().getNameTagVisibility() != Team.EnumVisible.NEVER)) {
+            if (entity instanceof AbstractClientPlayer && (((AbstractClientPlayer) entity).getTeam() == null || ((AbstractClientPlayer) entity).getTeam().getNameTagVisibility() != Team.EnumVisible.NEVER) && !((AbstractClientPlayer) entity).isSpectator()) {
                 this.renderPlayerPing((AbstractClientPlayer) entity, user, x, y, z, partialTicks);
             }
         }

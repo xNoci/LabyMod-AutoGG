@@ -119,7 +119,7 @@ public class Core extends LabyModAddon {
         getSubSettings().add(new BooleanElement("Auto Leave Enabled", this, new ControlElement.IconData(Material.LEVER), "autoLeave", this.autoLeaveEnabled).setHoverable(true));
         getSubSettings().add(new SliderElement("Leave Delay", this, new ControlElement.IconData(Material.WATCH), "autoLeaveDelay", this.leaveDelay).setRange(400, 5000).setHoverable(true));
 
-        getSubSettings().add(new HeaderElement("§7Settings §8[§9§oPlayer Ping§r§8]"));
+        getSubSettings().add(new HeaderElement("§7Settings §8[§9§oPlayer Ping§r§8] §8[§cBETA§8]"));
 
         getSubSettings().add(new BooleanElement("Render Own Ping", this, new ControlElement.IconData(Material.LEVER), "renderOwnPing", this.renderOwnPingEnabled).setHoverable(true));
         getSubSettings().add(new BooleanElement("Render Player Ping", this, new ControlElement.IconData(Material.LEVER), "renderPlayerPing", this.renderPingEnabled).setHoverable(true));
