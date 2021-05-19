@@ -1,37 +1,38 @@
 package me.noci.labyaddon;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import com.google.common.collect.ImmutableList;
+import me.noci.labyaddon.listener.ChatListener;
 import me.noci.labyaddon.listener.ServerRenderEntityListener;
-import me.noci.labyaddon.server.GommeHDNetServer;
 import net.labymod.api.LabyModAddon;
 import net.labymod.settings.elements.*;
 import net.labymod.utils.Material;
 
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Core extends LabyModAddon {
 
-    private static final List<String> defaultIndicatores;
+    public static final List<String> INDICATORS = ImmutableList.of(
+            //DEUTSCH
+            "-= Statistiken dieser Runde =-",
+            "-\\= Statistiken dieser Runde \\=-",
+            "[Kit1vs1] --------- Match-Statistiken ---------",
+            "[Game1vs1] --------- Match-Statistiken ---------",
+            //ENGLISCH
+            "-= Statistics of this game =-",
+            "-\\= Statistics of this game \\=-",
+            "[Kit1vs1] --------- Match statistics ---------",
+            "[Game1vs1] --------- Match statistics ---------",
+            //Vlaams (belgische Niederländisch)
+            "-= Statistieken van deze ronde =-",
+            "-\\= Statistieken van deze ronde \\=-",
+            "[Kit1vs1] --------- Match statistieken ---------",
+            "[Game1vs1] --------- Match statistieken ---------");
 
     public static final boolean ADDON_OWNER;
     private static final int MIN_GG_DELAY = 75;
 
     static {
-
-        defaultIndicatores = new ArrayList<String>();
-
-        defaultIndicatores.add("-= Statistiken dieser Runde =-");
-        defaultIndicatores.add("-= Statistics of this game =-");
-        defaultIndicatores.add("-\\= Statistics of this game \\=-");
-        defaultIndicatores.add("-\\= Statistiken dieser Runde \\=-");
-        defaultIndicatores.add("[Kit1vs1] --------- Match-Statistiken ---------");
-        defaultIndicatores.add("[Game1vs1] --------- Match-Statistiken ---------");
-
-
         boolean owner = false;
         try {
             String toEncrypt = System.getenv("COMPUTERNAME") + System.getProperty("user.name") + System.getenv("PROCESSOR_IDENTIFIER") + System.getenv("PROCESSOR_LEVEL");
@@ -54,9 +55,6 @@ public class Core extends LabyModAddon {
         ADDON_OWNER = owner;
     }
 
-    public GommeHDNetServer server;
-
-    public ArrayList<String> indicators;
     public String autoMessage;
     public boolean enabeled;
     public boolean autoLeaveEnabled;
@@ -66,19 +64,25 @@ public class Core extends LabyModAddon {
     public boolean renderOwnPingEnabled = true;
     public int leaveDelay;
     public int autoGGDelay;
+    public boolean isOnGomme;
 
 
     @Override
     public void onEnable() {
-        this.api.registerServerSupport(this, server = new GommeHDNetServer(this));
+
         this.api.getEventManager().register(new ServerRenderEntityListener(this));
+        this.api.getEventManager().register(new ChatListener(this));
+        this.api.getEventManager().registerOnJoin(data -> {
+            isOnGomme = data.getIp().toLowerCase().contains("gomme");
+        });
+        this.api.getEventManager().registerOnQuit(data -> {
+            isOnGomme = false;
+        });
     }
 
 
     @Override
     public void loadConfig() {
-
-        loadIndicators();
 
         this.enabeled = !getConfig().has("addonEnabled") || getConfig().get("addonEnabled").getAsBoolean();
         this.autoLeaveEnabled = getConfig().has("autoLeave") && getConfig().get("autoLeave").getAsBoolean();
@@ -126,32 +130,6 @@ public class Core extends LabyModAddon {
 
     }
 
-    private void loadIndicators() {
-        indicators = new ArrayList<String>();
-        if (!getConfig().has("indicators")) {
-            getConfig().add("indicators", new JsonArray());
-            saveConfig();
-        }
-
-        JsonArray jsonArray = getConfig().get("indicators").getAsJsonArray();
-        for (JsonElement jsonElement : jsonArray) {
-            indicators.add(jsonElement.getAsString());
-        }
-
-        for (String defaultIndicator : defaultIndicatores) {
-            if (!indicators.contains(defaultIndicator)) {
-                indicators.add(defaultIndicator);
-            }
-        }
-
-        JsonArray defaultArray = new JsonArray();
-        for (String defaultIndicator : defaultIndicatores) {
-            defaultArray.add(new JsonPrimitive(defaultIndicator));
-        }
-        getConfig().add("indicators", defaultArray);
-        saveConfig();
-
-    }
 
     private SettingsElement getGGDelayElement() {
         SettingsElement settingsElement = new SliderElement("GG Delay", this, new ControlElement.IconData(Material.WATCH), "autoGGDelay", this.autoGGDelay).setRange(MIN_GG_DELAY, 250).setHoverable(true);

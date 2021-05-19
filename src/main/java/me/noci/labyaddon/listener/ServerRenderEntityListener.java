@@ -30,10 +30,10 @@ public class ServerRenderEntityListener implements RenderEntityEvent {
     @Override
     public void onRender(Entity entity, double x, double y, double z, float partialTicks) {
         if (Minecraft.getMinecraft().getCurrentServerData() == null) return;
-        if (!core.enabeled || entity == null || Minecraft.getMinecraft().gameSettings.hideGUI || entity.isInvisibleToPlayer( Minecraft.getMinecraft().thePlayer))
+        if (!core.enabeled || entity == null || Minecraft.getMinecraft().gameSettings.hideGUI || entity.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer))
             return;
 
-        if (LabyMod.getSettings().showMyName && !core.renderOwnPingEnabled && entity.getUniqueID().equals(LabyMod.getInstance().getPlayerUUID()))
+        if (!core.renderOwnPingEnabled && entity.getUniqueID().equals(LabyMod.getInstance().getPlayerUUID()))
             return;
         if (!core.renderPingEnabled && !entity.getUniqueID().equals(LabyMod.getInstance().getPlayerUUID())) return;
 
@@ -105,7 +105,7 @@ public class ServerRenderEntityListener implements RenderEntityEvent {
 
         String pingDisplay = ping <= 0 ? "?" : ping + " ms";
         PingColor color = PingColor.getColor(ping);
-        fontRenderer.drawString(pingDisplay, (float) -fontRenderer.getStringWidth(pingDisplay) / 2, (float) y, sneaking ? color.getRGBA() : color.getRGB(), false);
+        fontRenderer.drawString(pingDisplay, (float) -fontRenderer.getStringWidth(pingDisplay) / 2, 0 /*TODO TEST*/, sneaking ? color.getRGBA() : color.getRGB(), false);
     }
 
 }
