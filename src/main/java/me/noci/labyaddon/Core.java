@@ -12,23 +12,6 @@ import java.util.List;
 
 public class Core extends LabyModAddon {
 
-    public static final List<String> INDICATORS = ImmutableList.of(
-            //DEUTSCH
-            "-= Statistiken dieser Runde =-",
-            "-\\= Statistiken dieser Runde \\=-",
-            "[Kit1vs1] --------- Match-Statistiken ---------",
-            "[Game1vs1] --------- Match-Statistiken ---------",
-            //ENGLISCH
-            "-= Statistics of this game =-",
-            "-\\= Statistics of this game \\=-",
-            "[Kit1vs1] --------- Match statistics ---------",
-            "[Game1vs1] --------- Match statistics ---------",
-            //Vlaams (belgische Niederländisch)
-            "-= Statistieken van deze ronde =-",
-            "-\\= Statistieken van deze ronde \\=-",
-            "[Kit1vs1] --------- Match statistieken ---------",
-            "[Game1vs1] --------- Match statistieken ---------");
-
     public static final boolean ADDON_OWNER;
     private static final int MIN_GG_DELAY = 75;
 

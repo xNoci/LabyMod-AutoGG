@@ -1,6 +1,7 @@
 package me.noci.labyaddon.listener;
 
 import me.noci.labyaddon.Core;
+import me.noci.labyaddon.languages.Languages;
 import net.labymod.api.events.MessageReceiveEvent;
 import net.labymod.core.LabyModCore;
 
@@ -16,7 +17,7 @@ public class ChatListener implements MessageReceiveEvent {
     public boolean onReceive(String formatted, String clean) {
         if (!core.isOnGomme) return false;
         if (!core.enabeled) return false;
-        if (!Core.INDICATORS.contains(clean)) return false;
+        if (!Languages.getRoundEndIndicators().contains(clean)) return false;
 
         Thread thread = new Thread(() -> {
             if (core.autoGGEnabled) {
